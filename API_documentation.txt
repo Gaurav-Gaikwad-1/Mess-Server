@@ -1,0 +1,472 @@
+index route
+/
+------------------------------------------------------
+login routes
+
+>> /api/login/
+	Type: GET
+	Body: null
+	Response: 
+		1.redirect to login page
+
+>> /api/login/customer
+	Type: POST
+	Body:{
+			"email":"abc@gmail.com",
+			"password":"******"
+		}
+	Response: 
+		1. success, redirect to dashboard, JWT(to be saved in the localstorage and to be used as request header bearer token)
+		2. failure
+
+>> /api/login/mess
+	Type: POST
+	Body:{
+			"email":"abc@gmail.com",
+			"password":"******"
+		}
+	Response: 
+		1. success, redirect to dashboard, JWT(to be saved in the localstorage and to be used as request header bearer token)
+		2. failure
+
+------------------------------------------------------
+Registration routes
+
+>> /api/register
+	Type: GET
+	Body: null
+	Response: 
+		1.redirect to login page
+
+>> /api/register/customer
+	Type: POST
+	Body:{
+			"name": "abc",
+			"email": "abc@gmail.com",
+			"password": "123",
+			"phone": 1234567890
+		}
+	Response: 
+		1. success, redirect to login page
+		2. Failure 
+
+>> /api/register/mess
+	Type: POST
+	Body:{
+		    "email": "abc@gmail.com",
+		    "password": "123",
+		    "messDetails": {
+		        "messName": "mess_name",
+		        "ownerName": "owner_name",
+		        "phone": 1234567890,
+		        "address": "some address"
+		    },
+		    "price": {
+		        "homeDelivery": {
+		            "available": true/false
+		        },
+		        "onVenue": {
+		            "available": true/false
+		        }
+		    }
+		}
+	Response: 
+		1. success, redirect to login page
+		2. Failure
+
+------------------------------------------------------
+Forgot password mechanism
+
+step1. request for OTP
+step2. receive OTP email
+step3. verify OTP
+step4. receive temporary token 
+step5. set new password
+step6. receive confirmation email
+
+>> /api/forgotpassword/otp
+	Type: POST
+	Body: {
+			"role":"customer",
+			"email":"geekdev127001@gmail.com"
+		}
+	Response: 
+		1. OTP via email(OTP in response is also available but only for testing)
+		2. failure
+
+>> /api/forgotpassword/verify
+	Type: POST
+	Body: {
+			"otp":"46664"
+		}
+	Response: 
+		1. success, temporary token that must be used only for password reset
+		2. failure
+
+>> /api/forgotpassword/password/customer
+	Type: POST
+	Header: Authentication bearer token
+	Body: {
+			"email":"geekdev127001@gmail.com",
+			"password":"12345"
+		}
+	Response: 
+		1. successful password reset email, redirect to login page
+		2. failure
+
+>> /api/forgotpassword/password/mess
+	Type: POST
+	Header: Authentication bearer token
+	Body: {
+			"email":"geekdev127001@gmail.com",
+			"password":"12345"
+		}
+	Response: 
+		1. successful password reset email, redirect to login page
+		2. failure
+		
+------------------------------------------------------
+JWT routes
+
+>> /api/refresh/customer
+	Type: GET
+	Header: Authentication bearer token(refresh token)
+	Body: {
+		email:"geekdev127001@gmail.com",
+		userId:"5f75e2a92e26b29c502589c3"
+	}
+	Response: 
+		1. success , new token and refresh token
+		2. failure
+
+>> /api/refresh/mess
+	Type: GET
+	Header: Authentication bearer token(refresh token)
+	Body: {
+		email:"testuser01@gmail.com",
+		userId:"5f75e2a92e26b29c502589c3"
+	}
+	Response: 
+		1. success , new token and refresh token
+		2. failure
+
+------------------------------------------------------
+Customer routes
+
+>> /api/customer
+	Type: GET 
+	Params: null
+	Header: Authentication bearer token
+	Body: null
+	Response:
+		1. redirect to cutomer dashboard
+		2. failure
+
+>> /api/customer/all
+	Type: GET
+	Params: null
+	Header: Authentication bearer token
+	Body: null
+	Response: 
+		1. success , list of all customers
+
+>> /api/customer/:id
+	Type: GET
+	Params: id
+	Header: Authentication bearer token
+	Body: null
+	Response: 
+		1. success , single document 
+		2. failure
+
+>> /api/customer/email
+	Type: GET
+	Params: null
+	Header: Authentication bearer token
+	Body:{
+			"email":"abc@gmail.com"
+		}
+	Response:
+		1. success , single document 
+		2. failure
+
+>> /api/customer/update/:id
+	Type: PATCH
+	Params: id
+	Header: Authentication bearer token
+	Body:{
+		"name": "abc",
+	    "email": "abc@gmail.com"
+	    "phone": 1111111111
+	}
+	note: the request body may differ depending on the fields to be updated
+	Response: 
+		1. success
+		2. failure
+
+>> /api/customer/delete/:id
+	Type: DELETE
+	Params: id
+	Header: Authentication bearer token
+	Body: null
+	Response: 
+		1. success 
+		2. failure
+
+------------------------------------------------------
+mess routes
+
+>> /api/mess
+	Type: GET
+	Params: null
+	Header: Authentication bearer token
+	Body: null
+	Response: 
+		1. redirect to mess dashboard
+		2. failure
+
+>> /api/mess/all
+	Type: GET
+	Params: id
+	Header: Authentication bearer token
+	Body: null
+	Response: 
+		1. success
+		2. failure
+
+>> /api/mess/:id
+	Type: GET
+	Params: id
+	Header: Authentication bearer token
+	Body: null
+	Response: 
+		1. success, single document
+		2. failure
+
+>> /api/mess/email
+	Type:  GET
+	Params: null
+	Header: Authentication bearer token
+	Body:{
+			"email":"abc@gmail.com"
+		}
+	Response:
+		1. success, single document
+		2. failure
+
+>> /api/mess/update/:id
+	Type:  PATCH
+	Params: id
+	Header: Authentication bearer token
+	Body:{
+			"messDetails": {
+            	"messName": "tikhat tarri missal",
+            	"ownerName": "Neha Shelar",
+                "phone": 9999999999,
+                "address": "corner vr"
+			},
+			"price": {
+				"homeDelivery": {
+			        "available": true,
+			        "DeliveryCharge": null
+			    },
+			    "onVenue": {
+			        "available": true/false
+			    }
+			}
+		}
+	note 1: the request body may differ depending on the fields to be updated.
+	note 2: If this request is used to update the MenuList, then it will rewrite entire MenuList array.
+	Response: 
+		1. success
+		2. failure
+
+>> /api/mess/delete/:id
+	Type: DELETE
+	Params: id
+	Header: Authentication bearer token
+	Body: null
+	Response:
+		1. success
+		2. failure
+
+------------------------------------------------------
+current menu routes
+
+>> /api/currentmenu/all
+	Type: GET
+	Params: null
+	Header: Authentication bearer token
+	Body: null
+	Response: 
+		1. success,array of documents
+		2. failure
+
+>> /api/currentmenu/:id
+	Type: GET
+	Params: id
+	Header: Authentication bearer token
+	Body: null
+	Response: 
+		1. success, single document
+		2. failure
+
+>> /api/currentmenu/new
+	Type: POST
+	Params: null
+	Header: Authentication bearer token
+	Body: {
+		    "messId":"5f2a85a17fbbd222a0036c02",
+		    "menuId":"5f6053fc00d6ea2780b29340"
+		}
+	Response: 
+		1. success
+		2. failure
+
+>> /api/currentmenu/update/:id
+	Type:  PATCH
+	Params: id
+	Header: Authentication bearer token
+	Body:{
+			"menuId":"5f6053fc00d6ea2780b29340"
+		}
+	note: the request body may differ depending on the fields to be updated
+	Response: 
+		1. success
+		2. failure
+
+>> /api/currentmenu/delete/:id
+	Type: DELETE
+	Params: id
+	Header: Authentication bearer token
+	Body: null
+	Response:
+		1. success
+		2. failure
+
+------------------------------------------------------
+MenuList routes
+
+>>/api/menu/all/:messId
+	Type: GET
+	Params: messid
+	Header: Authentication bearer token
+	Body: null
+	Response:
+		1. success
+		2. failure
+
+>> /api/menu/new/:messid
+	Type: POST
+	Params: id
+	Header: Authentication bearer token
+	Body: {
+		"menuItem": [
+            {
+                "itemName": "Dal",
+                "quantity": "Unlimited",
+                "price": 15        
+            },
+            {
+                "itemName": "Rice",
+                "quantity": "Unlimited",
+                "price": 15        
+            }
+        ],
+		"tag": [
+				"veg",
+				"main course"
+			],
+		"menuName": "newMenu02",
+		"price": 32
+	}
+	Response:
+		1. success
+		2. failure
+
+>>/api/menu/update/:messid/:menuid
+	Type: PATCH
+	Params: messid,menuid
+	Header: Authentication bearer token
+	Body: {
+		//will put something here later
+	}
+	Response:
+		1. success
+		2. failure
+
+>>/api/menu/delete/:messid/:menuid
+	Type: GET
+	Params: messid
+	Header: Authentication bearer token
+	Body: null
+	Response:
+		1. success
+		2. failure
+
+------------------------------------------------------
+Searchbar routes
+
+Find mess by name
+>>/api/search/mess?mess=<mess_name>
+	Type: GET
+	Params: null
+	Query String: 
+		key: mess
+		value: <mess_name>
+	Header: Authentication bearer token
+	Body: null
+	Response:
+		1. success
+		2. failure
+
+------------------------------------------------------
+Subscription routes
+
+subscribe to a mess
+>>/api/subscription/subscribe/:custId/:messId
+	Type: POST
+	Params: custId,messId
+	Header: Authentication bearer token
+	Body: null
+	Response:
+		1. success
+		2. failure
+
+unsubscribe a mess
+>>/api/subscription/unsubscribe/:subId
+	Type: DELETE
+	Params: subId
+	Header: Authentication bearer token
+	Body: null
+	Response:
+		1. success
+		2. failure
+
+------------------------------------------------------
+Mess features
+
+get all subscibers for a mess
+>>/api/mess/features/subscribers/:messid
+	Type: GET
+	Params: messid
+	Header: Authentication bearer token
+	Body: null
+	Response:
+		1. success
+		2. failure
+
+------------------------------------------------------
+Customer features
+
+get all saved mess for a customer
+>>/api/customer/features/savedmess/:custId
+	Type: GET
+	Params: custid
+	Header: Authentication bearer token
+	Body: null
+	Response:
+		1. success
+		2. failure
+
+------------------------------------------------------
